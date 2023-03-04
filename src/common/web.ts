@@ -15,8 +15,11 @@ export class ErrorResponse {
     }
 
     static ofError(error: Error): ErrorResponse {
-        const errorName = error.constructor.name;
-        return new ErrorResponse([errorName], error.message);
+        return new ErrorResponse([ErrorResponse.nameOfError(error)], error.message);
+    }
+
+    static nameOfError(error: Error): string {
+        return error.constructor.name;
     }
 }
 

@@ -1,17 +1,30 @@
 import { User } from "./user";
 import { UserRepository } from "./user-repository";
 import { newId } from "../ids";
+import { PasswordHasher } from "./password-hasher";
+import * as UserValidation from "./user-validation";
 
 export class SignUpUserHandler {
 
-    constructor(private readonly userRepository: UserRepository) { }
+    constructor(private readonly userRepository: UserRepository,
+        private readonly passwordHasher: PasswordHasher) { }
 
 
-    //TODO: validate, hash password etc.
-    handle(command: SignUpUserCommand): Promise<void> {
-        const newUser = new User(newId(), command.name, command.password)
-        return this.userRepository.create(newUser);
+    async handle(command: SignUpUserCommand) {
+        this.validateCommand(command)
+        
+        const hashedPassword = await this.passwordHasher.hash(command.password);
+        
+        const newUser = new User(newId(), command.name, hashedPassword);
+
+        await this.userRepository.create(newUser);
     }
+
+    private validateCommand(command: SignUpUserCommand) {
+        UserValidation.validateName(command.name);
+        UserValidation.validatePassword(command.password);
+    }
+
 }
 
 export class SignUpUserCommand {

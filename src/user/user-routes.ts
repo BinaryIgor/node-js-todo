@@ -1,10 +1,12 @@
 import { Router, Request, Response } from "express";
 import { InMemoryUserRepository } from "./user-repository";
+import { DummyPasswordHasher } from "./password-hasher";
 import { SignUpUserHandler, SignUpUserCommand } from './sign-up-user-handler';
 import { asyncHandler, requireBody } from "../common/web";
 
 const userRepository = new InMemoryUserRepository();
-const signUpUserHandler = new SignUpUserHandler(userRepository);
+const passwordHasher = new DummyPasswordHasher();
+const signUpUserHandler = new SignUpUserHandler(userRepository, passwordHasher);
 
 export const userRoutes = Router();
 
