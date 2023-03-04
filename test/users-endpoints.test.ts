@@ -9,7 +9,7 @@ describe("Users endpoints tests", () => {
             .post("/users/sign-up")
             .send({
                 "name": "some-name",
-                "password": "complext password"
+                "password": "complex password"
             });
 
         expect(response.statusCode).to.be.eq(201);
