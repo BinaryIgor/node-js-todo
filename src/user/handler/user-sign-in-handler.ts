@@ -2,7 +2,7 @@ import { UserRepository } from "../user-repository";
 import { PasswordHasher } from "../password-hasher";
 import { validateName, validatePassword } from "../user-validation";
 import { NotFoundError } from "../../common/errors";
-import { InvalidUserPassword } from "./user-errors";
+import { InvalidUserPasswordError } from "./user-errors";
 import { AuthClient, AuthToken } from "../../auth/auth-api";
 
 export class UserSignInHandler {
@@ -14,14 +14,14 @@ export class UserSignInHandler {
     async handle(command: UserSignInCommand): Promise<AuthToken> {
         this.validateCommand(command);
 
-        const user = await this.userRepository.getByName(command.name);
+        const user = await this.userRepository.ofName(command.name);
         if (!user) {
             throw new NotFoundError(`User of ${command.name} name doesn't exist`);
         }
 
         const validPassword = await this.passwordHasher.compare(command.password, user.password);
         if (!validPassword) {
-            throw new InvalidUserPassword();
+            throw new InvalidUserPasswordError();
         }
 
         return this.authClient.ofUser(user.name);

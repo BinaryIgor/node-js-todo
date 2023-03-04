@@ -4,7 +4,7 @@ export interface UserRepository {
 
     create(user: User): Promise<void>;
 
-    getByName(name: string): Promise<User | null>;
+    ofName(name: string): Promise<User | null>;
 }
 
 export class InMemoryUserRepository implements UserRepository {
@@ -16,7 +16,7 @@ export class InMemoryUserRepository implements UserRepository {
         return Promise.resolve();
     }
 
-    getByName(name: string): Promise<User | null> {
+    ofName(name: string): Promise<User | null> {
         for (const u of this.db.values()) {
             if (u.name == name) {
                 return Promise.resolve(u);
