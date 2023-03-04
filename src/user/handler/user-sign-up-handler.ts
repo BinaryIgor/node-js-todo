@@ -1,16 +1,16 @@
-import { User } from "./user";
-import { UserRepository } from "./user-repository";
-import { newId } from "../ids";
-import { PasswordHasher } from "./password-hasher";
-import * as UserValidation from "./user-validation";
+import { User } from "../user";
+import { UserRepository } from "../user-repository";
+import { newId } from "../../ids";
+import { PasswordHasher } from "../password-hasher";
+import * as UserValidation from "../user-validation";
 
-export class SignUpUserHandler {
+export class UserSignUpHandler {
 
     constructor(private readonly userRepository: UserRepository,
         private readonly passwordHasher: PasswordHasher) { }
 
 
-    async handle(command: SignUpUserCommand) {
+    async handle(command: UserSignUpCommand) {
         this.validateCommand(command)
         
         const hashedPassword = await this.passwordHasher.hash(command.password);
@@ -20,13 +20,13 @@ export class SignUpUserHandler {
         await this.userRepository.create(newUser);
     }
 
-    private validateCommand(command: SignUpUserCommand) {
+    private validateCommand(command: UserSignUpCommand) {
         UserValidation.validateName(command.name);
         UserValidation.validatePassword(command.password);
     }
 
 }
 
-export class SignUpUserCommand {
+export class UserSignUpCommand {
     constructor(readonly name: string, readonly password: string) { }
 }

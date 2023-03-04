@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
-    "test": "mocha --require ts-node/register test/**/*.test.ts --exit"
+    "test": "mocha --require ts-node/register test/**/*.test.ts --exit",
+    "test:file": "mocha --require ts-node/register test/**/$npm_config_file.test.ts --exit"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.14.4",
     "@types/supertest": "^2.0.12",
+    "body-parser": "^1.20.2",
     "chai": "^4.3.7",
     "express": "^4.18.2",
     "mocha": "^10.2.0",

@@ -4,7 +4,13 @@ export class AppError extends Error {
     }
 }
 
-export class ValidationError extends Error {
+export class ValidationError extends AppError {
+    constructor(message: string) {
+        super(message);
+    }
+}
+
+export class NotFoundError extends AppError {
     constructor(message: string) {
         super(message);
     }

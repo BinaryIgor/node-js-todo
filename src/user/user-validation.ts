@@ -5,7 +5,7 @@ export const MAX_NAME_LENGTH = 20;
 export const MIN_PASSWORD_LENGTH = 8;
 export const MAX_PASSWORD_LENGTH = 50;
 
-//TODO: better!
+//TODO: sth better!
 
 export function validateName(name: string) {
     let valid: boolean;
