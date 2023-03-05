@@ -5,8 +5,9 @@ import { InvalidNameError, InvalidPasswordError } from "../../src/user/user-erro
 import { UserSignInCommand } from "../../src/user/handler/user-sign-in-handler";
 import { UserSignUpCommand } from "../../src/user/handler/user-sign-up-handler";
 import { assertNotFoundErrorResponse, assertValidationErrorResponse } from "../web-test-utils";
+import { dbTestSuite } from "../db-test-suite";
 
-describe("Users endpoints tests", () => {
+dbTestSuite("Users endpoints tests", () => {
     it('should not allow to create invalid user account', async () => {
         const invalidSignUpCommand = new UserSignUpCommand("", "xD");
 
