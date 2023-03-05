@@ -1,6 +1,7 @@
 import { assert } from "chai";
 import request, { Test } from 'supertest';
 import { app } from '../../src/app';
+import { InvalidNameError, InvalidPasswordError } from "../../src/user/handler/user-errors";
 import { UserSignInCommand } from "../../src/user/handler/user-sign-in-handler";
 import { UserSignUpCommand } from "../../src/user/handler/user-sign-up-handler";
 import { assertNotFoundErrorResponse, assertValidationErrorResponse } from "../web-test-utils";
@@ -11,7 +12,7 @@ describe("Users endpoints tests", () => {
 
         const response = await userSignUpRequest(invalidSignUpCommand);
 
-        assertValidationErrorResponse(response);
+        assertValidationErrorResponse(response, InvalidNameError);
     });
 
     it('should not allow to sign-in given invalid request', async () => {
@@ -19,7 +20,7 @@ describe("Users endpoints tests", () => {
 
         const response = await userSignInRequest(invalidSignInCommand);
 
-        assertValidationErrorResponse(response);
+        assertValidationErrorResponse(response, InvalidPasswordError);
     });
 
     it('should not allow to sign-in given non existing user', async () => {

@@ -1,3 +1,4 @@
+import { PasswordHasher } from "../../src/user/password-hasher";
 import { User } from "../../src/user/user";
 import { UserRepository } from "../../src/user/user-repository";
 import { MAX_NAME_LENGTH, MAX_PASSWORD_LENGTH } from "../../src/user/user-validation";
@@ -21,9 +22,22 @@ export class TestUserRepository implements UserRepository {
 
         return Promise.resolve(null);
     }
-
 }
 
+export class TestPasswordHasher implements PasswordHasher {
+
+    private static readonly SALT = "test-salt";
+
+    hash(password: string): Promise<string> {
+        return Promise.resolve(`${TestPasswordHasher.SALT}:${password}`)
+    }
+
+    verify(rawPassword: string, hashedPassword: string): Promise<boolean> {
+        const [salt, password] = hashedPassword.split(":");
+        return Promise.resolve(salt == TestPasswordHasher.SALT && rawPassword == password);
+    }
+
+}
 
 export const TestUserObjects = {
 

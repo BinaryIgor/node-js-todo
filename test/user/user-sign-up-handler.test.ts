@@ -1,7 +1,6 @@
 import { assert } from "chai";
 import { UserSignUpHandler, UserSignUpCommand } from "../../src/user/handler/user-sign-up-handler";
-import { TestUserRepository } from "./user-test-utils";
-import { ScryptPasswordHasher } from "../../src/user/password-hasher";
+import { TestUserRepository, TestPasswordHasher } from "./user-test-utils";
 import { TestUserObjects } from "./user-test-utils";
 import { UserSignInCommand } from "../../src/user/handler/user-sign-in-handler";
 import { InvalidNameError, InvalidPasswordError } from "../../src/user/handler/user-errors";
@@ -10,12 +9,12 @@ import { User } from "../../src/user/user";
 
 let handler: UserSignUpHandler;
 let userRepository: TestUserRepository;
-let passwordHasher: ScryptPasswordHasher;
+let passwordHasher: TestPasswordHasher;
 
 describe("UserSignUpHandler tests", () => {
     beforeEach(() => {
         userRepository = new TestUserRepository();
-        passwordHasher = new ScryptPasswordHasher();
+        passwordHasher = new TestPasswordHasher();
         handler = new UserSignUpHandler(userRepository, passwordHasher);
     });
 

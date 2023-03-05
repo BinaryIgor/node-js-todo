@@ -6,8 +6,8 @@ export function assertErrorResponse(requestResponse: any, expectedErrorType: any
     assert.include(requestResponse.body.errors, expectedErrorType.name);
 }
 
-export function assertValidationErrorResponse(requestResponse: any) {
-    assertErrorResponse(requestResponse, ValidationError, 400);
+export function assertValidationErrorResponse(requestResponse: any, expectedErrorType: any = ValidationError) {
+    assertErrorResponse(requestResponse, expectedErrorType, 400);
 }
 
 export function assertNotFoundErrorResponse(requestResponse: any) {
