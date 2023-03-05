@@ -3,7 +3,7 @@ import request, { Test } from 'supertest';
 import { app } from '../../src/app';
 import { UserSignInCommand } from "../../src/user/handler/user-sign-in-handler";
 import { UserSignUpCommand } from "../../src/user/handler/user-sign-up-handler";
-import { assertNotFoundErrorResponse, assertValidationErrorResponse } from "../web-test";
+import { assertNotFoundErrorResponse, assertValidationErrorResponse } from "../web-test-utils";
 
 describe("Users endpoints tests", () => {
     it('should not allow to create invalid user account', async () => {

@@ -1,17 +1,42 @@
+import crypto, { BinaryLike } from "crypto";
+import { promisify } from "util";
+
+const randomBytesAsync = promisify(crypto.randomBytes);
+const scryptAsync = promisify(crypto.scrypt);
+
 export interface PasswordHasher {
 
     hash(password: string): Promise<string>
 
-    compare(rawPassword: string, hashedPassword: string): Promise<boolean>
+    verify(rawPassword: string, hashedPassword: string): Promise<boolean>
 }
 
-export class DummyPasswordHasher implements PasswordHasher {
+export class ScryptPasswordHasher implements PasswordHasher {
 
-    hash(password: string): Promise<string> {
-        return Promise.resolve(password);
+    constructor(readonly saltLength: number = 16, readonly hashLength: number = 32) { }
+
+    async hash(password: string): Promise<string> {
+        const salt = this.bytesToHexString(await randomBytesAsync(this.saltLength));
+        const hash = this.bytesToHexString(await this.scryptHash(password, salt));
+
+        return `${salt}:${hash}`;
     }
 
-    compare(rawPassword: string, hashedPassword: string): Promise<boolean> {
-        return Promise.resolve(rawPassword == hashedPassword);
+    private bytesToHexString(bytes: Buffer) {
+        return bytes.toString("hex");
     }
+
+    private async scryptHash(password: string, salt: BinaryLike): Promise<Buffer> {
+        return (await scryptAsync(password, salt, this.hashLength)) as Buffer;
+    }
+
+    async verify(rawPassword: string, hashedPassword: string): Promise<boolean> {
+        const [salt, hash] = hashedPassword.split(":");
+
+        const hashBytes = Buffer.from(hash, "hex");
+        const derivedHash = await this.scryptHash(rawPassword, salt);
+
+        return crypto.timingSafeEqual(hashBytes, derivedHash);
+    }
+
 }

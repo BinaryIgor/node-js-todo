@@ -19,7 +19,7 @@ export class UserSignInHandler {
             throw new NotFoundError(`User of ${command.name} name doesn't exist`);
         }
 
-        const validPassword = await this.passwordHasher.compare(command.password, user.password);
+        const validPassword = await this.passwordHasher.verify(command.password, user.password);
         if (!validPassword) {
             throw new InvalidUserPasswordError();
         }
