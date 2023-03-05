@@ -12,8 +12,8 @@ export class InvalidPasswordError extends ValidationError {
     }
 }
 
-export class InvalidUserPasswordError extends AppError {
+export class IncorrectUserPasswordError extends AppError {
     constructor() {
-        super("User password is not valid");
+        super("User password is not correct");
     }
 }

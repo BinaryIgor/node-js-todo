@@ -1,3 +1,4 @@
+import { AuthClient, AuthToken } from "../../src/auth/auth-api";
 import { PasswordHasher } from "../../src/user/password-hasher";
 import { User } from "../../src/user/user";
 import { UserRepository } from "../../src/user/user-repository";
@@ -35,6 +36,15 @@ export class TestPasswordHasher implements PasswordHasher {
     verify(rawPassword: string, hashedPassword: string): Promise<boolean> {
         const [salt, password] = hashedPassword.split(":");
         return Promise.resolve(salt == TestPasswordHasher.SALT && rawPassword == password);
+    }
+}
+
+export class TestAuthClient implements AuthClient {
+
+    private static readonly SECRET = "secret";
+
+    ofUser(id: string): AuthToken {
+        return new AuthToken(`${TestAuthClient.SECRET}:${id}`);
     }
 
 }
