@@ -1,4 +1,4 @@
-import { InvalidNameError, InvalidPasswordError } from "./handler/user-errors";
+import { InvalidNameError, InvalidPasswordError } from "./user-errors";
 
 export const MIN_NAME_LENGTH = 3;
 export const MAX_NAME_LENGTH = 20;

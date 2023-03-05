@@ -2,7 +2,7 @@ import { assert } from "chai";
 import { UserSignUpHandler, UserSignUpCommand } from "../../src/user/handler/user-sign-up-handler";
 import { TestUserRepository, TestPasswordHasher } from "./user-test-utils";
 import { TestUserObjects } from "./user-test-utils";
-import { InvalidNameError, InvalidPasswordError } from "../../src/user/handler/user-errors";
+import { InvalidNameError, InvalidPasswordError } from "../../src/user/user-errors";
 import { assertThrowsException } from "../test-utils";
 import { User } from "../../src/user/user";
 

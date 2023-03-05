@@ -1,7 +1,7 @@
 import { assert } from "chai";
 import request, { Test } from 'supertest';
 import { app } from '../../src/app';
-import { InvalidNameError, InvalidPasswordError } from "../../src/user/handler/user-errors";
+import { InvalidNameError, InvalidPasswordError } from "../../src/user/user-errors";
 import { UserSignInCommand } from "../../src/user/handler/user-sign-in-handler";
 import { UserSignUpCommand } from "../../src/user/handler/user-sign-up-handler";
 import { assertNotFoundErrorResponse, assertValidationErrorResponse } from "../web-test-utils";

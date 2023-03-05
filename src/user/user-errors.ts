@@ -1,4 +1,4 @@
-import { AppError, ValidationError } from "../../common/errors";
+import { AppError, ValidationError } from "../common/errors";
 
 export class InvalidNameError extends ValidationError {
     constructor(name: string) {

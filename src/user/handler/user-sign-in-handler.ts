@@ -2,7 +2,7 @@ import { UserRepository } from "../user-repository";
 import { PasswordHasher } from "../password-hasher";
 import { validateName, validatePassword } from "../user-validation";
 import { NotFoundError } from "../../common/errors";
-import { IncorrectUserPasswordError } from "./user-errors";
+import { IncorrectUserPasswordError } from "../user-errors";
 import { AuthClient, AuthToken } from "../../auth/auth-api";
 
 export class UserSignInHandler {

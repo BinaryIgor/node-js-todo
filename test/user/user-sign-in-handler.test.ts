@@ -3,7 +3,7 @@ import { UserSignInHandler, UserSignInCommand } from "../../src/user/handler/use
 import { UserSignUpHandler, UserSignUpCommand } from "../../src/user/handler/user-sign-up-handler";
 import { TestUserRepository, TestPasswordHasher, TestAuthClient } from "./user-test-utils";
 import { TestUserObjects } from "./user-test-utils";
-import { InvalidNameError, InvalidPasswordError, IncorrectUserPasswordError } from "../../src/user/handler/user-errors";
+import { InvalidNameError, InvalidPasswordError, IncorrectUserPasswordError } from "../../src/user/user-errors";
 import { assertThrowsException } from "../test-utils";
 import { User } from "../../src/user/user";
 import { NotFoundError } from "../../src/common/errors";
