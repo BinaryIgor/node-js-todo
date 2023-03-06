@@ -27,3 +27,7 @@ export async function assertThrowsException(func: Promise<any>, type: any, conta
         }
     }
 }
+
+export async function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
