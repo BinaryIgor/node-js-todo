@@ -7,7 +7,10 @@
     "build": "tsc",
     "start": "node dist/app.js",
     "test": "mocha --require ts-node/register test/**/*.test.ts --exit",
-    "test:file": "mocha --require ts-node/register test/**/$npm_config_file.test.ts --exit"
+    "test:file": "mocha --require ts-node/register test/**/$npm_config_file.test.ts --exit",
+    "test:int": "mocha --require ts-node/register test/**/*.int-test.ts --exit",
+    "test:int:file": "mocha --require ts-node/register test/**/$npm_config_file.int-test.ts --exit",
+    "test:all": "mocha --require ts-node/register test/**/*test.ts --exit"
   },
   "repository": {
     "type": "git",
