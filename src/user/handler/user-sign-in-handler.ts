@@ -1,4 +1,4 @@
-import { UserRepository } from "../user-repository";
+import { UserRepository } from "../repository/user-repository";
 import { PasswordHasher } from "../password-hasher";
 import { validateName, validatePassword } from "../user-validation";
 import { NotFoundError } from "../../common/errors";

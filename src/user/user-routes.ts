@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { InMemoryUserRepository } from "./user-repository";
+import { InMemoryUserRepository } from "./repository/user-repository";
 import { ScryptPasswordHasher } from "./password-hasher";
 import { UserSignUpHandler, UserSignUpCommand } from './handler/user-sign-up-handler';
 import { asyncHandler, requireBody } from "../common/web";

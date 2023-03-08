@@ -1,10 +1,10 @@
 import { assert } from "chai";
-import { UserSignUpHandler, UserSignUpCommand } from "../../src/user/handler/user-sign-up-handler";
-import { TestUserRepository, TestPasswordHasher } from "./user-test-utils";
-import { TestUserObjects } from "./user-test-utils";
-import { InvalidNameError, InvalidPasswordError } from "../../src/user/user-errors";
-import { assertThrowsException } from "../test-utils";
-import { User } from "../../src/user/user";
+import { UserSignUpHandler, UserSignUpCommand } from "../../../src/user/handler/user-sign-up-handler";
+import { TestUserRepository, TestPasswordHasher } from "../user-test-utils";
+import { TestUserObjects } from "../user-test-utils";
+import { InvalidNameError, InvalidPasswordError } from "../../../src/user/user-errors";
+import { assertThrowsException } from "../../test-utils";
+import { User } from "../../../src/user/user";
 
 let handler: UserSignUpHandler;
 let userRepository: TestUserRepository;
@@ -34,7 +34,7 @@ describe("UserSignUpHandler tests", () => {
         const command = new UserSignUpCommand(newUser.name, newUser.password);
 
         const currentUser = await userRepository.ofName(newUser.name);
-        assert.isNull(currentUser);
+        assert.isUndefined(currentUser);
 
         await handler.handle(command);
 

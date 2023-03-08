@@ -1,6 +1,7 @@
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from "testcontainers";
 import { postgresDb } from "../src/common/postgres-db";
 import { pathUpFromCurrentDir } from "../src/common/files";
+import { Knex } from "knex";
 import path from "path";
 
 const POSTGRES_IMAGE = "postgres:14";
@@ -12,6 +13,13 @@ class _CustomPostgreSqlContainer extends PostgreSqlContainer {
     }
 
     private startedContainer?: StartedPostgreSqlContainer;
+    private _db?: Knex;
+    get db(): Knex {
+        if (this._db) {
+            return this._db
+        }
+        throw new Error("Db hasn't been set yet");
+    }
 
     get dbAccess(): DbAccess {
         if (!this.startedContainer) {
@@ -21,14 +29,15 @@ class _CustomPostgreSqlContainer extends PostgreSqlContainer {
             this.startedContainer.getUsername(), this.startedContainer.getPassword());
     }
 
+
+
     async startAndInit(): Promise<_CustomPostgreSqlContainer> {
         if (!this.startedContainer) {
             this.startedContainer = await super.start()
-            console.log("Should set db!");
 
             const migrationsDir = path.join(await pathUpFromCurrentDir("db"), "migrations");
 
-            const db = postgresDb({
+            this._db = postgresDb({
                 host: this.dbAccess.host,
                 port: this.dbAccess.port,
                 databse: this.dbAccess.database,
@@ -37,13 +46,15 @@ class _CustomPostgreSqlContainer extends PostgreSqlContainer {
                 migrationsDir: migrationsDir
             });
 
-            await db.migrate.latest();
+            await this._db.migrate.latest();
         }
         return this;
     }
 
     async clearDb() {
-        console.log("Should clear db using...", this.dbAccess);
+        if (this._db) {
+            //TODO: clear
+        }
     }
 }
 

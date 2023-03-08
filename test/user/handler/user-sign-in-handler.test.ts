@@ -1,12 +1,11 @@
 import { assert } from "chai";
-import { UserSignInHandler, UserSignInCommand } from "../../src/user/handler/user-sign-in-handler";
-import { UserSignUpHandler, UserSignUpCommand } from "../../src/user/handler/user-sign-up-handler";
-import { TestUserRepository, TestPasswordHasher, TestAuthClient } from "./user-test-utils";
-import { TestUserObjects } from "./user-test-utils";
-import { InvalidNameError, InvalidPasswordError, IncorrectUserPasswordError } from "../../src/user/user-errors";
-import { assertThrowsException } from "../test-utils";
-import { User } from "../../src/user/user";
-import { NotFoundError } from "../../src/common/errors";
+import { UserSignInHandler, UserSignInCommand } from "../../../src/user/handler/user-sign-in-handler";
+import { UserSignUpHandler, UserSignUpCommand } from "../../../src/user/handler/user-sign-up-handler";
+import { TestUserRepository, TestPasswordHasher, TestAuthClient } from "../user-test-utils";
+import { TestUserObjects } from "../user-test-utils";
+import { InvalidNameError, InvalidPasswordError, IncorrectUserPasswordError } from "../../../src/user/user-errors";
+import { assertThrowsException } from "../../test-utils";
+import { NotFoundError } from "../../../src/common/errors";
 
 let handler: UserSignInHandler;
 let userRepository: TestUserRepository;

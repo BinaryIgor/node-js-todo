@@ -1,9 +1,9 @@
 import { AuthClient, AuthToken } from "../../src/auth/auth-api";
 import { PasswordHasher } from "../../src/user/password-hasher";
 import { User } from "../../src/user/user";
-import { UserRepository } from "../../src/user/user-repository";
+import { UserRepository } from "../../src/user/repository/user-repository";
 import { MAX_NAME_LENGTH, MAX_PASSWORD_LENGTH } from "../../src/user/user-validation";
-import { randomString } from "../test-utils";
+import { newId } from "../../src/common/ids";
 
 export class TestUserRepository implements UserRepository {
 
@@ -14,14 +14,14 @@ export class TestUserRepository implements UserRepository {
         return Promise.resolve();
     }
 
-    ofName(name: string): Promise<User | null> {
+    ofName(name: string): Promise<User | undefined> {
         for (const u of this.users.values()) {
             if (u.name == name) {
                 return Promise.resolve(u);
             }
         }
 
-        return Promise.resolve(null);
+        return Promise.resolve(undefined);
     }
 }
 
@@ -51,7 +51,7 @@ export class TestAuthClient implements AuthClient {
 
 export const TestUserObjects = {
 
-    aUser({ id = randomString(), name = "User1", password = "complexPassword123" } = {}): User {
+    aUser({ id = newId(), name = "User1", password = "complexPassword123" } = {}): User {
         return new User(id, name, password);
     },
     invalidNames(): (string | null | undefined)[] {

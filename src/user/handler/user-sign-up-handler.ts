@@ -1,5 +1,5 @@
 import { User } from "../user";
-import { UserRepository } from "../user-repository";
+import { UserRepository } from "../repository/user-repository";
 import { newId } from "../../common/ids";
 import { PasswordHasher } from "../password-hasher";
 import * as UserValidation from "../user-validation";

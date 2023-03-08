@@ -10,7 +10,6 @@ type DbConfig = {
 };
 
 export const postgresDb = (config: DbConfig): Knex => {
-    console.log("Dir...", __dirname);
     return knex({
         client: "pg",
         connection: {
@@ -30,6 +29,7 @@ export const postgresDb = (config: DbConfig): Knex => {
             min: 2,
             max: 10
         },
-        debug: true
+        // Uncomment to show queries
+        // debug: true
     });
 }
