@@ -1,4 +1,5 @@
 import { UnauthenticatedError } from "../common/errors";
+import { UUID } from "../common/types";
 import { UserContext } from "./auth-api";
 
 export function setUserContext(req: any, context: UserContext) {
@@ -15,4 +16,8 @@ export function getUserContextOrThrow(req: any): UserContext {
         return ctx;
     }
     throw new UnauthenticatedError();
+}
+
+export function getUserIdOrThrow(req: any): UUID {
+    return getUserContextOrThrow(req).id;
 }

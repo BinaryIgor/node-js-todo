@@ -1,20 +1,12 @@
-import { InvalidNameError, InvalidPasswordError } from "./user-errors";
+import { InvalidUserNameError, InvalidPasswordError } from "./user-errors";
+import * as Validator from "../common/validator";
 
-export const MIN_NAME_LENGTH = 3;
-export const MAX_NAME_LENGTH = 20;
 export const MIN_PASSWORD_LENGTH = 8;
 export const MAX_PASSWORD_LENGTH = 50;
 
 export function validateName(name: string) {
-    let valid: boolean;
-    try {
-        valid = name.length >= MIN_NAME_LENGTH && name.length <= MAX_NAME_LENGTH
-            && isLetter(name.charAt(0));
-    } catch (e) {
-        valid = false;
-    }
-    if (!valid) {
-        throw new InvalidNameError(name);
+    if (!Validator.isNameValid(name)) {
+        throw new InvalidUserNameError(name);
     }
 }
 
@@ -50,7 +42,7 @@ function hasPasswordRequiredCharacters(password: string): boolean {
 
     let hasLowerCaseLetter = false;
     let hasUpperCaseLetter = false;
-    let hasRequiredCharacters =  false;
+    let hasRequiredCharacters = false;
 
     for (const c of password) {
         if (!hasLowerCaseLetter && isLowerCaseLetter(c)) {

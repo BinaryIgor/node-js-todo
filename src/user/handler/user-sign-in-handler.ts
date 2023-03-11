@@ -1,6 +1,6 @@
 import { UserRepository } from "../repository/user-repository";
 import { PasswordHasher } from "../password-hasher";
-import { validateName, validatePassword } from "../user-validation";
+import { validateName, validatePassword } from "../user-validator";
 import { NotFoundError } from "../../common/errors";
 import { IncorrectUserPasswordError } from "../user-errors";
 import { AuthClient, AuthToken } from "../../auth/auth-api";

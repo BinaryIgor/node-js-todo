@@ -1,5 +1,5 @@
 import { assert } from "chai";
-import { InvalidNameError, InvalidPasswordError } from "../../src/user/user-errors";
+import { InvalidUserNameError, InvalidPasswordError } from "../../src/user/user-errors";
 import { UserSignInCommand } from "../../src/user/handler/user-sign-in-handler";
 import { UserSignUpCommand } from "../../src/user/handler/user-sign-up-handler";
 import { assertNotFoundErrorResponse, assertValidationErrorResponse } from "../web-test-utils";
@@ -11,7 +11,7 @@ appIntTestSuite("Users endpoints tests", () => {
 
         const response = await userSignUpRequest(invalidSignUpCommand);
 
-        assertValidationErrorResponse(response, InvalidNameError);
+        assertValidationErrorResponse(response, InvalidUserNameError);
     });
 
     it('should not allow to sign-in given invalid request', async () => {

@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import { config } from "./config";
 import { postgresDb } from "./common/postgres-db";
 import * as AuthModule from "./auth/auth-module";
+import { buildTodoRoutes } from "./todo/todo-routes";
 
 function isPublicEndpoint(endpoint: string): boolean {
     return endpoint.startsWith("/users/sign-in") || endpoint.startsWith("/users/sign-up");
@@ -25,8 +26,6 @@ export const startApp = (config: {
     const authClient = AuthModule.authClient();
     const authMiddleware = AuthModule.authMiddleware(isPublicEndpoint, authClient.authenticate);
 
-    const userRoutes = buildUserRoutes(db, authClient);
-
     const app = express();
 
     app.use(bodyParser.json());
@@ -41,7 +40,11 @@ export const startApp = (config: {
         // throw new Error("Some error!")
     });
 
+    const userRoutes = buildUserRoutes(db, authClient);
+    const todoRoutes = buildTodoRoutes(db);
+
     app.use('/users', userRoutes);
+    app.use('/todos', todoRoutes);
 
     app.use((error: any, req: Request, res: Response, next: NextFunction) => {
         console.error("Something went wrong...", error);

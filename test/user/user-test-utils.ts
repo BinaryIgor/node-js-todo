@@ -2,7 +2,8 @@ import { AuthClient, AuthToken, UserContext } from "../../src/auth/auth-api";
 import { PasswordHasher } from "../../src/user/password-hasher";
 import { User } from "../../src/user/user";
 import { UserRepository } from "../../src/user/repository/user-repository";
-import { MAX_NAME_LENGTH, MAX_PASSWORD_LENGTH } from "../../src/user/user-validation";
+import { MAX_PASSWORD_LENGTH } from "../../src/user/user-validator";
+import { MAX_NAME_LENGTH } from "../../src/common/validator";
 import { newId } from "../../src/common/ids";
 
 export class TestUserRepository implements UserRepository {

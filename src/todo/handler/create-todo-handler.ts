@@ -1,25 +1,17 @@
-import { Todo, Priority, Step } from "../todo";
-import { TodoRepository } from "../todo-repository";
+import { Todo  } from "../todo";
+import { TodoRepository } from "../repository/todo-repository";
+import * as TodoValidator from "../todo-validator";
 
 export class CreateTodoHandler {
 
     constructor(private readonly todoRepository: TodoRepository) { }
 
 
-    async handle(command: CreateTodoCommand): Promise<Todo> {
-        const todo = this.toValidatedTodo(command);
+    async handle(command: Todo): Promise<Todo> {
+        TodoValidator.validateTodo(command);
         
-        await this.todoRepository.create(todo)
+        await this.todoRepository.create(command);
     
-        return todo;
+        return command;
     }
-
-    //TODO: validate
-    private toValidatedTodo(command: CreateTodoCommand): Todo {
-        throw new Error("Not implemented yet");
-    }
-}
-
-export class CreateTodoCommand {
-
 }

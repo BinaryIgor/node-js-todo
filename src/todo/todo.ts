@@ -9,6 +9,10 @@ export class Todo {
         readonly priority: Priority,
         readonly description: string,
         readonly steps: Step[]) { }
+
+    static create(todo: Todo): Todo {
+        return new Todo(todo.id, todo.userId, todo.name, todo.deadline, todo.priority, todo.description, todo.steps);
+    }
 }
 
 export enum Priority {
@@ -18,5 +22,5 @@ export enum Priority {
 }
 
 export class Step {
-    constructor(readonly order: number, readonly name: string, readonly description: string) { }
+    constructor(readonly name: string, readonly description: string) { }
 }

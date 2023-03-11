@@ -2,7 +2,7 @@ import { assert } from "chai";
 import { UserSignUpHandler, UserSignUpCommand } from "../../../src/user/handler/user-sign-up-handler";
 import { TestUserRepository, TestPasswordHasher } from "../user-test-utils";
 import { TestUserObjects } from "../user-test-utils";
-import { InvalidNameError, InvalidPasswordError } from "../../../src/user/user-errors";
+import { InvalidUserNameError, InvalidPasswordError } from "../../../src/user/user-errors";
 import { assertThrowsException } from "../../test-utils";
 import { User } from "../../../src/user/user";
 
@@ -20,7 +20,7 @@ describe("UserSignUpHandler tests", () => {
     TestUserObjects.invalidNames().forEach(invalidName =>
         it(`should reject sign-up with invalid name: ${invalidName}`, async () => {
             const command = new UserSignUpCommand(invalidName!!, "SomeGoodPassword12");
-            assertThrowsException(handler.handle(command), InvalidNameError, invalidName);
+            assertThrowsException(handler.handle(command), InvalidUserNameError, invalidName);
         }));
 
     TestUserObjects.invalidPasswords().forEach(invalidPassword =>

@@ -1,6 +1,6 @@
 import { AppError, ValidationError } from "../common/errors";
 
-export class InvalidNameError extends ValidationError {
+export class InvalidUserNameError extends ValidationError {
     constructor(name: string) {
         super(`${name} is not a valid name`);
     }

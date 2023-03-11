@@ -3,7 +3,7 @@ import { UserSignInHandler, UserSignInCommand } from "../../../src/user/handler/
 import { UserSignUpHandler, UserSignUpCommand } from "../../../src/user/handler/user-sign-up-handler";
 import { TestUserRepository, TestPasswordHasher, TestAuthClient } from "../user-test-utils";
 import { TestUserObjects } from "../user-test-utils";
-import { InvalidNameError, InvalidPasswordError, IncorrectUserPasswordError } from "../../../src/user/user-errors";
+import { InvalidUserNameError, InvalidPasswordError, IncorrectUserPasswordError } from "../../../src/user/user-errors";
 import { assertThrowsException } from "../../test-utils";
 import { NotFoundError } from "../../../src/common/errors";
 
@@ -26,7 +26,7 @@ describe("UserSignInHandler tests", () => {
     TestUserObjects.invalidNames().forEach(invalidName =>
         it(`should reject sign in with invalid name: ${invalidName}`, async () => {
             const command = new UserSignInCommand(invalidName!!, "SomeGoodPassword44");
-            assertThrowsException(handler.handle(command), InvalidNameError, invalidName);
+            assertThrowsException(handler.handle(command), InvalidUserNameError, invalidName);
         }));
 
     TestUserObjects.invalidPasswords().forEach(invalidPassword =>

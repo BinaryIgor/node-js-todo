@@ -2,7 +2,7 @@ import { User } from "../user";
 import { UserRepository } from "../repository/user-repository";
 import { newId } from "../../common/ids";
 import { PasswordHasher } from "../password-hasher";
-import * as UserValidation from "../user-validation";
+import * as UserValidator from "../user-validator";
 
 export class UserSignUpHandler {
 
@@ -21,8 +21,8 @@ export class UserSignUpHandler {
     }
 
     private validateCommand(command: UserSignUpCommand) {
-        UserValidation.validateName(command.name);
-        UserValidation.validatePassword(command.password);
+        UserValidator.validateName(command.name);
+        UserValidator.validatePassword(command.password);
     }
 
 }
