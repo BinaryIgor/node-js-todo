@@ -29,8 +29,6 @@ class _CustomPostgreSqlContainer extends PostgreSqlContainer {
             this.startedContainer.getUsername(), this.startedContainer.getPassword());
     }
 
-
-
     async startAndInit(): Promise<_CustomPostgreSqlContainer> {
         if (!this.startedContainer) {
             this.startedContainer = await super.start()
@@ -40,7 +38,7 @@ class _CustomPostgreSqlContainer extends PostgreSqlContainer {
             this._db = postgresDb({
                 host: this.dbAccess.host,
                 port: this.dbAccess.port,
-                databse: this.dbAccess.database,
+                database: this.dbAccess.database,
                 user: this.dbAccess.user,
                 password: this.dbAccess.password,
                 migrationsDir: migrationsDir

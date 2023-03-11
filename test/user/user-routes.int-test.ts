@@ -1,13 +1,11 @@
 import { assert } from "chai";
-import request, { Test } from 'supertest';
-import { app } from '../../src/app';
 import { InvalidNameError, InvalidPasswordError } from "../../src/user/user-errors";
 import { UserSignInCommand } from "../../src/user/handler/user-sign-in-handler";
 import { UserSignUpCommand } from "../../src/user/handler/user-sign-up-handler";
 import { assertNotFoundErrorResponse, assertValidationErrorResponse } from "../web-test-utils";
-import { dbTestSuite } from "../db-test-suite";
+import { appIntTestSuite, appRequest } from "../app-int-test-suite";
 
-dbTestSuite("Users endpoints tests", () => {
+appIntTestSuite("Users endpoints tests", () => {
     it('should not allow to create invalid user account', async () => {
         const invalidSignUpCommand = new UserSignUpCommand("", "xD");
 
@@ -46,14 +44,10 @@ dbTestSuite("Users endpoints tests", () => {
     });
 });
 
-function userSignUpRequest(command: UserSignInCommand): Test {
-    return request(app)
-        .post("/users/sign-up")
-        .send(command);
+function userSignUpRequest(command: UserSignInCommand) {
+    return appRequest().post("/users/sign-up").send(command);
 }
 
-function userSignInRequest(command: any): Test {
-    return request(app)
-        .post("/users/sign-in")
-        .send(command);
+function userSignInRequest(command: any) {
+    return appRequest().post("/users/sign-in").send(command);
 }

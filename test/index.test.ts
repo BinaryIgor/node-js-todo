@@ -11,12 +11,18 @@ describe("Makes basic requests", () => {
     // })
     it("should pass", () => {
         console.log("Some simple test...")
-    })
+    });
 
     it('Users should be equal', () => {
         const firstUser = new User("1", "Igor", "secret password");
         const secondUser = new User("1", "Igor", "secret password");
 
         expect(firstUser).to.be.deep.eq(secondUser);
-    })
+    });
+
+    it('should manipulate process env', () => {
+        process.env.SOME_VAR = '23';
+        const someVar = process.env.SOME_VAR;
+        console.log("Some var...", someVar);
+    });
 })
