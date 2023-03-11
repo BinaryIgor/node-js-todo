@@ -1,9 +1,13 @@
-import { AuthClient, AuthToken } from "./auth-api";
+import { AuthClient, AuthToken, UserContext } from "./auth-api";
 
+//TODO: proper impl
 export class JwtAuthClient implements AuthClient {
 
-    //TODO: proper impl
     ofUser(id: string): AuthToken {
         return new AuthToken(id);
+    }
+
+    authenticate(token: string): UserContext {
+        return new UserContext(token);
     }
 }

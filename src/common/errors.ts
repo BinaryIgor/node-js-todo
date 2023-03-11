@@ -15,3 +15,9 @@ export class NotFoundError extends AppError {
         super(message);
     }
 }
+
+export class UnauthenticatedError extends AppError {
+    constructor() {
+        super("Authentication required");
+    }
+}

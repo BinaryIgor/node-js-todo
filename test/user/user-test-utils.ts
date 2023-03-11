@@ -1,4 +1,4 @@
-import { AuthClient, AuthToken } from "../../src/auth/auth-api";
+import { AuthClient, AuthToken, UserContext } from "../../src/auth/auth-api";
 import { PasswordHasher } from "../../src/user/password-hasher";
 import { User } from "../../src/user/user";
 import { UserRepository } from "../../src/user/repository/user-repository";
@@ -45,6 +45,10 @@ export class TestAuthClient implements AuthClient {
 
     ofUser(id: string): AuthToken {
         return new AuthToken(`${TestAuthClient.SECRET}:${id}`);
+    }
+
+    authenticate(token: string): UserContext {
+        throw new Error("Method not implemented.");
     }
 
 }
