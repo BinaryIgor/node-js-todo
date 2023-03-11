@@ -29,5 +29,4 @@ export class SqlUserRepository implements UserRepository {
             .where({ name: name })
             .first();
     }
-
 }

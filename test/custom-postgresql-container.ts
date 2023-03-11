@@ -5,6 +5,9 @@ import { Knex } from "knex";
 import path from "path";
 
 const POSTGRES_IMAGE = "postgres:14";
+const TABLES_TO_TRUNCATE = [
+    '"user"."user"'
+];
 
 class _CustomPostgreSqlContainer extends PostgreSqlContainer {
 
@@ -51,7 +54,8 @@ class _CustomPostgreSqlContainer extends PostgreSqlContainer {
 
     async clearDb() {
         if (this._db) {
-            //TODO: clear
+            const truncateStatement = TABLES_TO_TRUNCATE.map(t => `TRUNCATE ${t} CASCADE`).join("\n");
+            await this.db.raw(truncateStatement);
         }
     }
 }

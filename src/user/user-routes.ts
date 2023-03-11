@@ -1,15 +1,14 @@
 import { Router, Request, Response } from "express";
-import { InMemoryUserRepository } from "./repository/user-repository";
+import { SqlUserRepository } from "./repository/sql-user-repository";
 import { ScryptPasswordHasher } from "./password-hasher";
 import { UserSignUpHandler, UserSignUpCommand } from './handler/user-sign-up-handler';
 import { asyncHandler, requireBody } from "../common/web";
 import { UserSignInCommand, UserSignInHandler } from "./handler/user-sign-in-handler";
-import { authClient } from "../auth/auth-api";
+import { AuthClient } from "../auth/auth-api";
 import { Knex } from "knex";
 
-export const buildUserRoutes = (db: Knex) => {
-    //TODO: use db!
-    const userRepository = new InMemoryUserRepository();
+export const buildUserRoutes = (db: Knex, authClient: AuthClient) => {
+    const userRepository = new SqlUserRepository(db);
     const passwordHasher = new ScryptPasswordHasher();
 
     const userSignUpHandler = new UserSignUpHandler(userRepository, passwordHasher);

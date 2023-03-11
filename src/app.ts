@@ -5,6 +5,7 @@ import { AppError, NotFoundError } from "./common/errors";
 import bodyParser from "body-parser";
 import { config } from "./config";
 import { postgresDb } from "./common/postgres-db";
+import * as AuthModule from "./auth/auth-module";
 
 export const startApp = (config: {
     port: number,
@@ -17,8 +18,9 @@ export const startApp = (config: {
     }
 }) => {
     const db = postgresDb(config.db);
+    const authClient = AuthModule.authClient();
 
-    const userRoutes = buildUserRoutes(db);
+    const userRoutes = buildUserRoutes(db, authClient);
 
     const app = express();
 

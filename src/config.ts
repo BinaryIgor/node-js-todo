@@ -18,7 +18,6 @@ function envVariableAsNumberOrThrow(key: string) {
     }
 }
 
-
 export const config = () => ({
     port: envVariableOrDefault("PORT", 3000),
     db: {
