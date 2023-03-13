@@ -1,15 +1,18 @@
 import express, { Request, Response, NextFunction } from "express";
 import { buildUserRoutes } from "./user/user-routes";
-import { ErrorResponse } from "./common/web";
+import { asyncHandler, ErrorResponse } from "./common/web";
 import { AppError, NotFoundError, UnauthenticatedError } from "./common/errors";
 import bodyParser from "body-parser";
 import { config } from "./config";
 import { postgresDb } from "./common/postgres-db";
 import * as AuthModule from "./auth/auth-module";
 import { buildTodoRoutes } from "./todo/todo-routes";
+import promClient from "prom-client";
+
 
 function isPublicEndpoint(endpoint: string): boolean {
-    return endpoint.startsWith("/users/sign-in") || endpoint.startsWith("/users/sign-up");
+    return endpoint.startsWith("/users/sign-in") || endpoint.startsWith("/users/sign-up")
+        || endpoint.startsWith("/metrics");
 }
 
 export const startApp = (config: {
@@ -26,19 +29,23 @@ export const startApp = (config: {
     const authClient = AuthModule.authClient();
     const authMiddleware = AuthModule.authMiddleware(isPublicEndpoint, authClient.authenticate);
 
+    //TODO: shouldn't be public, use express-prometheus-middleware!
+    promClient.collectDefaultMetrics({
+        labels: {
+            "app": "node-todo"
+        }
+    });
+
     const app = express();
 
     app.use(bodyParser.json());
     app.use((req: Request, res: Response, next: NextFunction) => authMiddleware.call(req, next));
 
-    app.get("/", (req: Request, res: Response) => {
-        console.log(`Geting request ${req.path}, ${req.query}`);
-        res.json({
-            id: "some uuid",
-            name: "some-name"
-        });
-        // throw new Error("Some error!")
-    });
+    app.get("/metrics", asyncHandler(async (req: Request, res: Response) => {
+        const metrics = await promClient.register.metrics();
+        res.contentType("plain/text");
+        res.send(metrics);
+    }));
 
     const userRoutes = buildUserRoutes(db, authClient);
     const todoRoutes = buildTodoRoutes(db);
@@ -78,8 +85,10 @@ export const startApp = (config: {
 //Start only if called directly from the console
 const entryFile = process.argv?.[1];
 
-if (entryFile.startsWith("app")) {
+if (entryFile.endsWith("app.js")) {
     console.log("Starting an app...");
     startApp(config());
+} else {
+    console.log(`Different file ${entryFile} not starting app!`);
 }
 
