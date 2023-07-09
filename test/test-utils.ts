@@ -31,3 +31,24 @@ export async function assertThrowsException(func: Promise<any>, type: any, conta
 export async function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+export class TestClock {
+
+    private _now = new Date();
+
+    public setTime(now: Date) {
+        this._now = now;
+    }
+
+    now(): Date {
+        return this._now;
+    }
+
+    nowSecondsTimestamp(): number {
+        return this.now().getTime() / 1000;
+    }
+
+    nowPlusSecondsTimestamp(secondsToAdd: number): number {
+        return this.nowSecondsTimestamp() + secondsToAdd;
+    }
+}

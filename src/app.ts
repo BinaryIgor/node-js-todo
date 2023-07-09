@@ -8,7 +8,7 @@ import { postgresDb } from "./common/postgres-db";
 import * as AuthModule from "./auth/auth-module";
 import { buildTodoRoutes } from "./todo/todo-routes";
 import promClient from "prom-client";
-
+import { Clock, defaultClock } from "./common/time";
 
 function isPublicEndpoint(endpoint: string): boolean {
     return endpoint.startsWith("/users/sign-in") || endpoint.startsWith("/users/sign-up")
@@ -23,10 +23,17 @@ export const startApp = (config: {
         database: string,
         user: string,
         password: string
+    },
+    jwt: {
+        accessTokenDuration: number,
+        refreshTokenDuration: number,
+        secret: string,
+        issuer: string
     }
-}) => {
+}, clock: Clock = defaultClock) => {
     const db = postgresDb(config.db);
-    const authClient = AuthModule.authClient();
+    const jwtConfig = config.jwt;
+    const authClient = AuthModule.authClient(clock, jwtConfig.accessTokenDuration, jwtConfig.refreshTokenDuration, jwtConfig.secret, jwtConfig.issuer);
     const authMiddleware = AuthModule.authMiddleware(isPublicEndpoint, authClient.authenticate);
 
     //TODO: shouldn't be public, use express-prometheus-middleware!
@@ -81,7 +88,7 @@ export const startApp = (config: {
 
     return {
         app: app,
-        authClient : authClient
+        authClient: authClient
     }
 };
 

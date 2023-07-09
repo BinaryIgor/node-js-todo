@@ -35,7 +35,7 @@ appIntTestSuite("Users endpoints tests", () => {
         const signInResponse = await userSignInRequest(signInCommand);
 
         assertJsonResponse<UserSignInResponse>(signInResponse, body => {
-            const userTokenContext = authClient.authenticate(body.token.token);
+            const userTokenContext = authClient.authenticate(body.tokens.access.token);
             assert.equal(body.userId, userTokenContext.id);
         });
     });

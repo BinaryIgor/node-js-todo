@@ -3,7 +3,7 @@ import { PasswordHasher } from "../password-hasher";
 import { validateName, validatePassword } from "../user-validator";
 import { NotFoundError } from "../../common/errors";
 import { IncorrectUserPasswordError } from "../user-errors";
-import { AuthClient, AuthToken } from "../../auth/auth-api";
+import { AuthClient, AuthTokens } from "../../auth/auth-api";
 import { UUID } from "../../common/types";
 
 export class UserSignInHandler {
@@ -25,9 +25,7 @@ export class UserSignInHandler {
             throw new IncorrectUserPasswordError();
         }
 
-        const token = this.authClient.ofUser(user.id)
-        
-        return new UserSignInResponse(user.id, token);
+        return new UserSignInResponse(user.id, this.authClient.ofUser(user.id));
     }
 
     private validateCommand(command: UserSignInCommand) {
@@ -41,5 +39,5 @@ export class UserSignInCommand {
 }
 
 export class UserSignInResponse {
-    constructor(readonly userId: UUID, readonly token: AuthToken) {}
+    constructor(readonly userId: UUID, readonly tokens: AuthTokens) {}
 }

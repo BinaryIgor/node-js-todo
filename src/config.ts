@@ -26,5 +26,11 @@ export const config = () => ({
         database: envVariableOrThrow("DB_DATABASE"),
         user: envVariableOrThrow("DB_USER"),
         password: envVariableOrThrow("DB_PASSWORD"),
+    },
+    jwt: {
+        accessTokenDuration: envVariableAsNumberOrThrow("JWT_ACCESS_TOKEN_DURATION"),
+        refreshTokenDuration: envVariableAsNumberOrThrow("JWT_REFRESH_TOKEN_DURATION"),
+        secret: envVariableOrThrow("JWT_SECRET"),
+        issuer: envVariableOrThrow("JWT_ISSUER")
     }
 });

@@ -21,3 +21,9 @@ export class UnauthenticatedError extends AppError {
         super("Authentication required");
     }
 }
+
+export class InvalidAuthTokenError extends AppError {
+    constructor() {
+        super("Invalid auth token");
+    }
+}
