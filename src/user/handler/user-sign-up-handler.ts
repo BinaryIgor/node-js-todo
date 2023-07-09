@@ -1,4 +1,4 @@
-import { User } from "../user";
+import { User } from "../models";
 import { UserRepository } from "../repository/user-repository";
 import { newId } from "../../common/ids";
 import { PasswordHasher } from "../password-hasher";

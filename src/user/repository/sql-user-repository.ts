@@ -1,4 +1,4 @@
-import { User } from "../user";
+import { User } from "../models";
 import { UserRepository } from "./user-repository";
 import { Knex } from 'knex';
 import { UUID, OptionalPromise } from "../../common/types";

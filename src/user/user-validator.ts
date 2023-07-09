@@ -10,18 +10,6 @@ export function validateName(name: string) {
     }
 }
 
-function isLetter(char: string): boolean {
-    return char.toUpperCase() != char.toLowerCase();
-}
-
-function isUpperCaseLetter(char: string): boolean {
-    return isLetter(char) && char == char.toUpperCase();
-}
-
-function isLowerCaseLetter(char: string): boolean {
-    return isLetter(char) && char == char.toLowerCase();
-}
-
 export function validatePassword(password: string) {
     let valid: boolean;
     try {
@@ -45,10 +33,10 @@ function hasPasswordRequiredCharacters(password: string): boolean {
     let hasRequiredCharacters = false;
 
     for (const c of password) {
-        if (!hasLowerCaseLetter && isLowerCaseLetter(c)) {
+        if (!hasLowerCaseLetter && Validator.isLowerCaseLetter(c)) {
             hasLowerCaseLetter = true;
         }
-        if (!hasUpperCaseLetter && isUpperCaseLetter(c)) {
+        if (!hasUpperCaseLetter && Validator.isUpperCaseLetter(c)) {
             hasUpperCaseLetter = true;
         }
         hasRequiredCharacters = hasLowerCaseLetter && hasUpperCaseLetter;

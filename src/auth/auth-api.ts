@@ -6,7 +6,7 @@ export class AuthToken {
 
 export interface AuthClient {
 
-    ofUser(id: string): AuthToken
+    ofUser(id: UUID): AuthToken
 
     authenticate(token: string): UserContext
 }

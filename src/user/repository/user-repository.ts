@@ -1,4 +1,4 @@
-import { User } from "../user";
+import { User } from "../models";
 import { OptionalPromise } from "../../common/types";
 
 export interface UserRepository {

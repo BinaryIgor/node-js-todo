@@ -1,34 +1,29 @@
 import { assert } from "chai";
 import { InvalidUserNameError, InvalidPasswordError } from "../../src/user/user-errors";
-import { UserSignInCommand } from "../../src/user/handler/user-sign-in-handler";
+import { UserSignInCommand, UserSignInResponse } from "../../src/user/handler/user-sign-in-handler";
 import { UserSignUpCommand } from "../../src/user/handler/user-sign-up-handler";
-import { assertNotFoundErrorResponse, assertValidationErrorResponse } from "../web-test-utils";
-import { appIntTestSuite, appRequest } from "../app-int-test-suite";
+import { assertJsonResponse, assertNotFoundErrorResponse, assertValidationErrorResponse } from "../web-test-utils";
+import { appIntTestSuite, appRequest, authClient } from "../app-int-test-suite";
+import { TestUserObjects } from "./user-test-utils";
 
 appIntTestSuite("Users endpoints tests", () => {
-    it('should not allow to create invalid user account', async () => {
-        const invalidSignUpCommand = new UserSignUpCommand("", "xD");
+    TestUserObjects.invalidNames().forEach(invalidName =>
+        it(`should reject sign-up with invalid name: ${invalidName}`, async () => {
+            const command = new UserSignUpCommand(invalidName!!, "SomeGoodPassword12");
 
-        const response = await userSignUpRequest(invalidSignUpCommand);
+            const response = await userSignUpRequest(command);
 
-        assertValidationErrorResponse(response, InvalidUserNameError);
-    });
+            assertValidationErrorResponse(response, InvalidUserNameError);
+        }));
 
-    it('should not allow to sign-in given invalid request', async () => {
-        const invalidSignInCommand = { name: "some name" };
+    TestUserObjects.invalidPasswords().forEach(async invalidPassword =>
+        it(`should reject sign-up with invalid password: ${invalidPassword}`, async () => {
+            const command = new UserSignUpCommand("SomeName", invalidPassword!!);
 
-        const response = await userSignInRequest(invalidSignInCommand);
+            const response = await userSignUpRequest(command);
 
-        assertValidationErrorResponse(response, InvalidPasswordError);
-    });
-
-    it('should not allow to sign-in given non existing user', async () => {
-        const nonExistingUserCommand = new UserSignInCommand("Some user", "ComplexPassword11");
-
-        const response = await userSignInRequest(nonExistingUserCommand);
-
-        assertNotFoundErrorResponse(response);
-    });
+            assertValidationErrorResponse(response, InvalidPasswordError);
+        }));
 
     it('should allow to create new account and then sign-in', async () => {
         const signUpCommand = new UserSignUpCommand("Iprogrammerr", "SomeComplexPassword123");
@@ -39,8 +34,18 @@ appIntTestSuite("Users endpoints tests", () => {
 
         const signInResponse = await userSignInRequest(signInCommand);
 
-        assert.equal(signInResponse.statusCode, 200);
-        assert.isNotEmpty(signInResponse.body.token);
+        assertJsonResponse<UserSignInResponse>(signInResponse, body => {
+            const userTokenContext = authClient.authenticate(body.token.token);
+            assert.equal(body.userId, userTokenContext.id);
+        });
+    });
+
+    it('should not allow to sign-in given non existing user', async () => {
+        const nonExistingUserCommand = new UserSignInCommand("Some user", "ComplexPassword11");
+
+        const response = await userSignInRequest(nonExistingUserCommand);
+
+        assertNotFoundErrorResponse(response);
     });
 });
 

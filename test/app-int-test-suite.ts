@@ -1,8 +1,11 @@
 import { CustomPostgreSqlContainer } from "./custom-postgresql-container";
 import { startApp } from "../src/app";
 import request from 'supertest';
+import { AuthClient } from "../src/auth/auth-api";
 
-const APP_PORT = 3000;
+const APP_PORT = 10_000 + Math.ceil(Math.random() * 10_000);
+
+export let authClient: AuthClient;
 
 export const appIntTestSuite = (testsDescription: any, testsCallback: Function) => {
     describe(testsDescription, () => {
@@ -12,10 +15,12 @@ export const appIntTestSuite = (testsDescription: any, testsCallback: Function) 
 
             await CustomPostgreSqlContainer.startAndInit();
 
-            startApp({
+            const app = startApp({
                 port: APP_PORT,
                 db: CustomPostgreSqlContainer.dbAccess
             });
+
+            authClient = app.authClient;
         });
 
         afterEach(async () => {

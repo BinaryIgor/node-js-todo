@@ -5,7 +5,7 @@ export async function up(knex: Knex) {
         CREATE SCHEMA "user";
         CREATE TABLE "user".user (
             id UUID PRIMARY KEY,
-            name TEXT UNIQUE,
+            name TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
             created_at TIMESTAMP NOT NULL DEFAULT NOW()
         );

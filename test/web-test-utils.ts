@@ -13,3 +13,9 @@ export function assertValidationErrorResponse(requestResponse: any, expectedErro
 export function assertNotFoundErrorResponse(requestResponse: any) {
     assertErrorResponse(requestResponse, NotFoundError, 404);
 }
+
+export function assertJsonResponse<T>(requestResponse: any, bodyAssert: (body: T) => void, responseCode = 200) {
+    assert.equal(requestResponse.statusCode, responseCode);
+    assert.isTrue(requestResponse.header['content-type'].startsWith("application/json"));
+    bodyAssert(requestResponse.body)
+}

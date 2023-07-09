@@ -4,6 +4,7 @@ import { validateName, validatePassword } from "../user-validator";
 import { NotFoundError } from "../../common/errors";
 import { IncorrectUserPasswordError } from "../user-errors";
 import { AuthClient, AuthToken } from "../../auth/auth-api";
+import { UUID } from "../../common/types";
 
 export class UserSignInHandler {
 
@@ -11,7 +12,7 @@ export class UserSignInHandler {
         private readonly passwordHasher: PasswordHasher,
         private readonly authClient: AuthClient) { }
 
-    async handle(command: UserSignInCommand): Promise<AuthToken> {
+    async handle(command: UserSignInCommand): Promise<UserSignInResponse> {
         this.validateCommand(command);
 
         const user = await this.userRepository.ofName(command.name);
@@ -24,7 +25,9 @@ export class UserSignInHandler {
             throw new IncorrectUserPasswordError();
         }
 
-        return this.authClient.ofUser(user.name);
+        const token = this.authClient.ofUser(user.id)
+        
+        return new UserSignInResponse(user.id, token);
     }
 
     private validateCommand(command: UserSignInCommand) {
@@ -35,4 +38,8 @@ export class UserSignInHandler {
 
 export class UserSignInCommand {
     constructor(readonly name: string, readonly password: string) { }
+}
+
+export class UserSignInResponse {
+    constructor(readonly userId: UUID, readonly token: AuthToken) {}
 }

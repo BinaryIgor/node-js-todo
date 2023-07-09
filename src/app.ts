@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-import { buildUserRoutes } from "./user/user-routes";
+import { buildRoutes } from "./user/user-routes";
 import { asyncHandler, ErrorResponse } from "./common/web";
 import { AppError, NotFoundError, UnauthenticatedError } from "./common/errors";
 import bodyParser from "body-parser";
@@ -47,7 +47,7 @@ export const startApp = (config: {
         res.send(metrics);
     }));
 
-    const userRoutes = buildUserRoutes(db, authClient);
+    const userRoutes = buildRoutes(db, authClient);
     const todoRoutes = buildTodoRoutes(db);
 
     app.use('/users', userRoutes);
@@ -79,7 +79,10 @@ export const startApp = (config: {
         console.log(`Server started on ${config.port}`);
     });
 
-    return app;
+    return {
+        app: app,
+        authClient : authClient
+    }
 };
 
 //Start only if called directly from the console

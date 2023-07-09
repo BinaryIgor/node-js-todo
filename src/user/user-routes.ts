@@ -7,7 +7,7 @@ import { UserSignInCommand, UserSignInHandler } from "./handler/user-sign-in-han
 import { AuthClient } from "../auth/auth-api";
 import { Knex } from "knex";
 
-export const buildUserRoutes = (db: Knex, authClient: AuthClient) => {
+export const buildRoutes = (db: Knex, authClient: AuthClient) => {
     const userRepository = new SqlUserRepository(db);
     const passwordHasher = new ScryptPasswordHasher();
 
@@ -24,8 +24,8 @@ export const buildUserRoutes = (db: Knex, authClient: AuthClient) => {
 
     userRoutes.post("/sign-in", asyncHandler(async (req: Request, res: Response) => {
         const command = requireBody<UserSignInCommand>(req);
-        const authToken = await userSignInHandler.handle(command);
-        res.send(authToken);
+        const response = await userSignInHandler.handle(command);
+        res.send(response);
     }));
 
     return userRoutes;
