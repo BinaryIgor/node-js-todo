@@ -1,4 +1,6 @@
-import { AuthClient } from "./auth-api";
+import { Router, Request, Response } from "express";
+import { asyncHandler, requireBody } from "../common/web";
+import { AuthClient, RefreshTokenRequest } from "./auth-api";
 import { AuthMiddleware } from "./auth-middleware";
 import { JwtAuthClient } from "./jwt-auth-client";
 import { Clock } from "../common/time";
@@ -7,6 +9,7 @@ export class AuthModule {
 
     readonly client: AuthClient
     readonly middleware: AuthMiddleware
+    readonly router: Router
 
     constructor(config: {
         clock: Clock,
@@ -19,5 +22,12 @@ export class AuthModule {
         this.client = new JwtAuthClient(config.clock, config.accessTokenDuration,
             config.refreshTokenDuration, config.secret, config.issuer);
         this.middleware = new AuthMiddleware(config.isPublicEndpoint, this.client.authenticate);
+
+        this.router = Router();
+        this.router.post("/refresh-tokens", asyncHandler(async (req: Request, res: Response) => {
+            const request = requireBody<RefreshTokenRequest>(req);
+            const tokens = this.client.refresh(request.token);
+            res.send(tokens);
+        }));
     }
 }

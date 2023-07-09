@@ -5,7 +5,11 @@ export class AuthToken {
 }
 
 export class AuthTokens {
-    constructor(readonly access: AuthToken, readonly refresh: AuthToken) {}
+    constructor(readonly access: AuthToken, readonly refresh: AuthToken) { }
+}
+
+export class RefreshTokenRequest {
+    constructor(readonly token: string) { }
 }
 
 export interface AuthClient {

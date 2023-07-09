@@ -12,7 +12,7 @@ import { Clock, defaultClock } from "./common/time";
 
 function isPublicEndpoint(endpoint: string): boolean {
     return endpoint.startsWith("/users/sign-in") || endpoint.startsWith("/users/sign-up")
-        || endpoint.startsWith("/auth/refresh-token")
+        || endpoint.startsWith("/auth/refresh-tokens")
         || endpoint.startsWith("/metrics");
 }
 
@@ -63,6 +63,8 @@ export const startApp = (config: {
         res.contentType("plain/text");
         res.send(metrics);
     }));
+
+    app.use("/auth", authModule.router);
 
     const userRoutes = buildRoutes(db, authClient);
     const todoRoutes = buildTodoRoutes(db);

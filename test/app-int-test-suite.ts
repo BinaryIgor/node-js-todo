@@ -7,6 +7,7 @@ import * as TestUtils from "./test-utils";
 const APP_PORT = 10_000 + Math.ceil(Math.random() * 10_000);
 
 export let authClient: AuthClient;
+export const clock: TestUtils.TestClock = new TestUtils.TestClock();
 
 export const appIntTestSuite = (testsDescription: any, testsCallback: Function) => {
     describe(testsDescription, () => {
@@ -25,7 +26,7 @@ export const appIntTestSuite = (testsDescription: any, testsCallback: Function) 
                     secret: TestUtils.randomString(20),
                     issuer: "Todo App"
                 }
-            });
+            }, clock);
 
             authClient = app.authClient;
         });

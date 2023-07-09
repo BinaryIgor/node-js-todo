@@ -3,8 +3,9 @@ import { InvalidUserNameError, InvalidPasswordError } from "../../src/user/user-
 import { UserSignInCommand, UserSignInResponse } from "../../src/user/handler/user-sign-in-handler";
 import { UserSignUpCommand } from "../../src/user/handler/user-sign-up-handler";
 import { assertJsonResponse, assertNotFoundErrorResponse, assertValidationErrorResponse } from "../web-test-utils";
-import { appIntTestSuite, appRequest, authClient } from "../app-int-test-suite";
+import { appIntTestSuite, appRequest, authClient, clock } from "../app-int-test-suite";
 import { TestUserObjects } from "./user-test-utils";
+import { AuthTokens } from "../../src/auth/auth-api";
 
 appIntTestSuite("Users endpoints tests", () => {
     TestUserObjects.invalidNames().forEach(invalidName =>
@@ -25,7 +26,7 @@ appIntTestSuite("Users endpoints tests", () => {
             assertValidationErrorResponse(response, InvalidPasswordError);
         }));
 
-    it('should allow to create new account and then sign-in', async () => {
+    it('should allow to create new account and then sign-in, and then refresh tokens', async () => {
         const signUpCommand = new UserSignUpCommand("Iprogrammerr", "SomeComplexPassword123");
 
         await userSignUpRequest(signUpCommand).expect(201);
@@ -37,6 +38,15 @@ appIntTestSuite("Users endpoints tests", () => {
         assertJsonResponse<UserSignInResponse>(signInResponse, body => {
             const userTokenContext = authClient.authenticate(body.tokens.access.token);
             assert.equal(body.userId, userTokenContext.id);
+        });
+
+        clock.moveTimeBy(1);
+
+        const signInResponseRefreshTokens = signInResponse.body.tokens.refresh;
+        const refreshTokensReponse = await refreshTokensRequest(signInResponseRefreshTokens.token);
+
+        assertJsonResponse<AuthTokens>(refreshTokensReponse, body => {
+            assert.notDeepEqual(body.refresh, signInResponseRefreshTokens);
         });
     });
 
@@ -55,4 +65,8 @@ function userSignUpRequest(command: UserSignInCommand) {
 
 function userSignInRequest(command: any) {
     return appRequest().post("/users/sign-in").send(command);
+}
+
+function refreshTokensRequest(refreshToken: string) {
+    return appRequest().post("/auth/refresh-tokens").send({ token: refreshToken });
 }
