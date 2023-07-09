@@ -40,6 +40,10 @@ export class TestClock {
         this._now = now;
     }
 
+    public moveTimeBy(seconds: number) {
+        this._now.setTime(this._now.getTime() + seconds);
+    }
+
     now(): Date {
         return this._now;
     }
