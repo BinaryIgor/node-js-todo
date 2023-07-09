@@ -5,13 +5,14 @@ import { AppError, NotFoundError, UnauthenticatedError } from "./common/errors";
 import bodyParser from "body-parser";
 import { config } from "./config";
 import { postgresDb } from "./common/postgres-db";
-import * as AuthModule from "./auth/auth-module";
+import { AuthModule } from "./auth/auth-module";
 import { buildTodoRoutes } from "./todo/todo-routes";
 import promClient from "prom-client";
 import { Clock, defaultClock } from "./common/time";
 
 function isPublicEndpoint(endpoint: string): boolean {
     return endpoint.startsWith("/users/sign-in") || endpoint.startsWith("/users/sign-up")
+        || endpoint.startsWith("/auth/refresh-token")
         || endpoint.startsWith("/metrics");
 }
 
@@ -32,9 +33,18 @@ export const startApp = (config: {
     }
 }, clock: Clock = defaultClock) => {
     const db = postgresDb(config.db);
+
     const jwtConfig = config.jwt;
-    const authClient = AuthModule.authClient(clock, jwtConfig.accessTokenDuration, jwtConfig.refreshTokenDuration, jwtConfig.secret, jwtConfig.issuer);
-    const authMiddleware = AuthModule.authMiddleware(isPublicEndpoint, authClient.authenticate);
+    const authModule = new AuthModule({
+        clock: clock,
+        accessTokenDuration: jwtConfig.accessTokenDuration,
+        refreshTokenDuration: jwtConfig.refreshTokenDuration,
+        secret: jwtConfig.secret,
+        issuer: jwtConfig.issuer,
+        isPublicEndpoint: isPublicEndpoint
+    });
+    const authClient = authModule.client;
+    const authMiddleware = authModule.middleware;
 
     //TODO: shouldn't be public, use express-prometheus-middleware!
     promClient.collectDefaultMetrics({
