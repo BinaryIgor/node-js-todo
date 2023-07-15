@@ -25,6 +25,12 @@ export class InvalidTodoDescriptionError extends ValidationError {
     }
 }
 
+export class InvalidStepOrderError extends ValidationError {
+    constructor() {
+        super(`Step order must be a positive number`);
+    }
+}
+
 export class InvalidStepNameError extends ValidationError {
     constructor(name: string) {
         super(`${name} is not a valid name`);

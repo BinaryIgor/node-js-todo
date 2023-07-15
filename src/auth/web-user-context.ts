@@ -7,7 +7,7 @@ export function setUserContext(req: any, context: UserContext) {
 }
 
 export function getUserContext(req: any): UserContext | undefined {
-    return req.user?.(req.user as UserContext)
+    return req.user;
 }
 
 export function getUserContextOrThrow(req: any): UserContext {

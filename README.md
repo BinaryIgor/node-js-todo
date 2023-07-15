@@ -19,7 +19,7 @@ Body: {
     password: string
 }
 Response: { 
-    id: UUID
+    
 }
 
 
@@ -29,7 +29,17 @@ Body: {
     password: string
 }
 Response: {
-    token: string
+    userId: UUID,
+    tokens: {
+        access: {
+            token: string,
+            expiresAt: timestamp
+        },
+        refresh: {
+            token: string,
+            expiresAt: timestamp
+        }
+    }
 }
 ```
 

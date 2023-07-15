@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { AppError } from "./errors";
+import { AppError, ValidationError } from "./errors";
 
 export class BodyRequiredError extends AppError {
     constructor() {
@@ -33,4 +33,28 @@ export function requireBody<T>(req: Request): T {
         return body as T;
     }
     throw new BodyRequiredError();
+}
+
+export function requireDateTimeInIsoFormat(dateTime: string): Date {
+    try {
+        const parsed = new Date(dateTime);
+        if (parsed.toISOString() == dateTime) {
+            throw new ValidationError("");
+        }
+        return parsed;
+    } catch(e) {
+        throw new ValidationError("Invalid date time format. Required iso, but was: " + dateTime);
+    }
+}
+
+export function requireEnum<T>(string: string, type: any): T {
+    try {
+        const castedEnum = string as T;
+        if (Object.values(type).includes(castedEnum)) {
+            return castedEnum;
+        }
+        throw new ValidationError("");
+    } catch(e) {
+        throw new ValidationError("")
+    }
 }

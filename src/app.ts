@@ -8,13 +8,17 @@ import { postgresDb } from "./common/postgres-db";
 import { AuthModule } from "./auth/auth-module";
 import { buildTodoRoutes } from "./todo/todo-routes";
 import promClient from "prom-client";
-import { Clock, defaultClock } from "./common/time";
+import { Clock, defaultClock } from "./common/date";
 
 function isPublicEndpoint(endpoint: string): boolean {
     return endpoint.startsWith("/users/sign-in") || endpoint.startsWith("/users/sign-up")
         || endpoint.startsWith("/auth/refresh-tokens")
         || endpoint.startsWith("/metrics");
 }
+
+//TODO: workaround for tests complaining:
+// Error: A metric with the name process_cpu_user_seconds_total has already been registered
+let defaultMetricsAreCollected = false;
 
 export const startApp = (config: {
     port: number,
@@ -47,11 +51,14 @@ export const startApp = (config: {
     const authMiddleware = authModule.middleware;
 
     //TODO: shouldn't be public, use express-prometheus-middleware!
-    promClient.collectDefaultMetrics({
-        labels: {
-            "app": "node-todo"
-        }
-    });
+    if (!defaultMetricsAreCollected) {
+        promClient.collectDefaultMetrics({
+            labels: {
+                "app": "node-todo"
+            }
+        });
+        defaultMetricsAreCollected = true
+    }
 
     const app = express();
 

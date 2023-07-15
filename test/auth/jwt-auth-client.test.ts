@@ -2,7 +2,7 @@ import { assert } from "chai";
 import { TestClock, randomNumber, randomString } from "../test-utils";
 import { JwtAuthClient } from "../../src/auth/jwt-auth-client";
 import { newId } from "../../src/common/ids";
-import * as Time from "../../src/common/time";
+import * as Dates from "../../src/common/dates";
 import { InvalidAuthTokenError } from "../../src/common/errors";
 import { AuthTokens } from "../../src/auth/auth-api";
 import { UUID } from "../../src/common/types";
@@ -27,8 +27,8 @@ describe("JwtAuthClient tests", () => {
     function assertValidTokens(tokens: AuthTokens, userId: UUID) {
         assert.notEqual(tokens.access.token, tokens.refresh.token);
 
-        const expectedAccessTokenExpiresAt = Time.dateFromSecondsTimestamp(clock.nowPlusSecondsTimestamp(accessTokenDuration));
-        const expectedRefreshTokenExpiresAt = Time.dateFromSecondsTimestamp(clock.nowPlusSecondsTimestamp(refreshTokenDuration));
+        const expectedAccessTokenExpiresAt = Dates.dateFromSecondsTimestamp(clock.nowPlusSecondsTimestamp(accessTokenDuration));
+        const expectedRefreshTokenExpiresAt = Dates.dateFromSecondsTimestamp(clock.nowPlusSecondsTimestamp(refreshTokenDuration));
 
         assert.deepEqual(tokens.access.expiresAt, expectedAccessTokenExpiresAt);
         assert.deepEqual(tokens.refresh.expiresAt, expectedRefreshTokenExpiresAt);

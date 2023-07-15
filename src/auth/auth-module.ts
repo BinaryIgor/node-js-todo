@@ -3,7 +3,7 @@ import { asyncHandler, requireBody } from "../common/web";
 import { AuthClient, RefreshTokenRequest } from "./auth-api";
 import { AuthMiddleware } from "./auth-middleware";
 import { JwtAuthClient } from "./jwt-auth-client";
-import { Clock } from "../common/time";
+import { Clock } from "../common/date";
 
 export class AuthModule {
 
@@ -21,7 +21,7 @@ export class AuthModule {
     }) {
         this.client = new JwtAuthClient(config.clock, config.accessTokenDuration,
             config.refreshTokenDuration, config.secret, config.issuer);
-        this.middleware = new AuthMiddleware(config.isPublicEndpoint, this.client.authenticate);
+        this.middleware = new AuthMiddleware(config.isPublicEndpoint, this.client);
 
         this.router = Router();
         this.router.post("/refresh-tokens", asyncHandler(async (req: Request, res: Response) => {

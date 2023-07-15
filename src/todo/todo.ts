@@ -5,13 +5,25 @@ export class Todo {
         readonly id: UUID,
         readonly userId: UUID,
         readonly name: string,
-        readonly deadline: Date | undefined,
+        readonly deadline: Date | null,
         readonly priority: Priority,
-        readonly description: string,
+        readonly description: string | null,
         readonly steps: Step[]) { }
 
-    static create(todo: Todo): Todo {
+    static create(todo: {
+        id: UUID,
+        userId: UUID,
+        name: string,
+        deadline: Date | null,
+        priority: Priority,
+        description: string | null,
+        steps: Step[]
+    }): Todo {
         return new Todo(todo.id, todo.userId, todo.name, todo.deadline, todo.priority, todo.description, todo.steps);
+    }
+
+    withSteps(steps: Step[]): Todo {
+        return { ...this, steps };
     }
 }
 
@@ -22,5 +34,5 @@ export enum Priority {
 }
 
 export class Step {
-    constructor(readonly name: string, readonly description: string) { }
+    constructor(readonly order: number, readonly name: string, readonly description: string | null = null) { }
 }

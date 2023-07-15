@@ -18,8 +18,8 @@ export const buildRoutes = (db: Knex, authClient: AuthClient) => {
 
     userRoutes.post("/sign-up", asyncHandler(async (req: Request, res: Response) => {
         const command = requireBody<UserSignUpCommand>(req);
-        await userSignUpHandler.handle(command);
-        res.status(201).send({});
+        const userId = await userSignUpHandler.handle(command);
+        res.status(201).send({ id: userId });
     }));
 
     userRoutes.post("/sign-in", asyncHandler(async (req: Request, res: Response) => {

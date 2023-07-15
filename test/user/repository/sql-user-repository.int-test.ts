@@ -12,8 +12,6 @@ dbTestSuite("SqlUserRepository tests", () => {
     });
 
     it('should allow to query user by name', async () => {
-        console.log("DB...", CustomPostgreSqlContainer.dbAccess);
-
         const user1Name = "user-1";
         const user2Name = "user-2";
         const user1 = TestUserObjects.aUser({ name: user1Name });

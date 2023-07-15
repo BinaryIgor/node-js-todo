@@ -1,9 +1,10 @@
-import { InvalidStepNameError, InvalidStepDescriptionError, InvalidTodoDeadlineError, InvalidTodoDescriptionError, InvalidTodoNameError, InvalidTodoPriorityError, InvalidTodoTooManyStepsError, InvalidTodoNotUniqueStepsError } from "./todo-errors";
+import { InvalidStepNameError, InvalidStepDescriptionError, InvalidTodoDeadlineError, InvalidTodoDescriptionError, InvalidTodoNameError, InvalidTodoPriorityError, InvalidTodoTooManyStepsError, InvalidTodoNotUniqueStepsError, InvalidStepOrderError } from "./todo-errors";
 import * as Validator from "../common/validator";
-import * as Dates from "../common/time";
+import * as Dates from "../common/date";
 import { Priority, Step, Todo } from "./todo";
 
-export const MAX_DESCRIPTION_LENGTH = 3_000;
+export const MAX_TODO_DESCRIPTION_LENGTH = 3_000;
+export const MAX_STEP_DESCRIPTION_LENGTH = 1_000;
 export const MAX_STEPS = 10;
 
 export function validateName(name: string) {
@@ -12,7 +13,7 @@ export function validateName(name: string) {
     }
 }
 
-export function validateDeadline(deadline: Date | undefined) {
+export function validateDeadline(deadline: Date | null) {
     if (deadline) {
         const now = new Date();
         if (!Dates.isDateAfter(deadline, now)) {
@@ -21,7 +22,7 @@ export function validateDeadline(deadline: Date | undefined) {
     }
 }
 
-export function validatePriority(priority: Priority | undefined) {
+export function validatePriority(priority: Priority | null) {
     if (!priority) {
         throw new InvalidTodoPriorityError();
     }
@@ -35,31 +36,37 @@ export function validatePriority(priority: Priority | undefined) {
     throw new InvalidTodoPriorityError();
 }
 
-export function validateDescription(description: string) {
-    if (!isDescriptionValid(description)) {
-        throw new InvalidTodoDescriptionError(MAX_DESCRIPTION_LENGTH);
+export function validateDescription(description: string | null) {
+    if (description && !isDescriptionValid(description)) {
+        throw new InvalidTodoDescriptionError(MAX_TODO_DESCRIPTION_LENGTH);
+    }
+}
+
+function validateStepDescription(description: string | null) {
+    if (description && !isDescriptionValid(description)) {
+        throw new InvalidStepDescriptionError(MAX_STEP_DESCRIPTION_LENGTH);
     }
 }
 
 function isDescriptionValid(description: string): boolean {
     let valid: boolean;
     try {
-        valid = description.length <= MAX_DESCRIPTION_LENGTH;
+        valid = description.length <= MAX_TODO_DESCRIPTION_LENGTH;
     } catch (e) {
         valid = false;
     }
     return valid;
 }
 
-export function validateStepName(name: string) {
-    if (!Validator.isNameValid(name)) {
-        throw new InvalidStepNameError(name);
+function validateStepOrder(order: number) {
+    if (order <=0) {
+        throw new InvalidStepOrderError();
     }
 }
 
-export function validateStepDescription(description: string) {
-    if (!isDescriptionValid(description)) {
-        throw new InvalidStepDescriptionError(MAX_DESCRIPTION_LENGTH);
+function validateStepName(name: string) {
+    if (!Validator.isNameValid(name)) {
+        throw new InvalidStepNameError(name);
     }
 }
 
@@ -82,8 +89,9 @@ export function validateSteps(steps: Step[]) {
         }
         stepNames.push(s.name);
 
+        validateStepOrder(s.order);
         validateStepName(s.name);
-        validateDescription(s.description);
+        validateStepDescription(s.description);
     });
 }
 

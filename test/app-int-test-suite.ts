@@ -4,8 +4,9 @@ import request from 'supertest';
 import { AuthClient } from "../src/auth/auth-api";
 import * as TestUtils from "./test-utils";
 
-const APP_PORT = 10_000 + Math.ceil(Math.random() * 10_000);
 
+
+let appPort: number;
 export let authClient: AuthClient;
 export const clock: TestUtils.TestClock = new TestUtils.TestClock();
 
@@ -17,8 +18,10 @@ export const appIntTestSuite = (testsDescription: any, testsCallback: Function) 
 
             await CustomPostgreSqlContainer.startAndInit();
 
+            appPort = 10_000 + Math.ceil(Math.random() * 10_000);
+
             const app = startApp({
-                port: APP_PORT,
+                port: appPort,
                 db: CustomPostgreSqlContainer.dbAccess,
                 jwt: {
                     accessTokenDuration: 100,
@@ -40,5 +43,9 @@ export const appIntTestSuite = (testsDescription: any, testsCallback: Function) 
 };
 
 export function appRequest() {
-    return request(`http://localhost:${APP_PORT}`);
+    return request(appUrl());
+}
+
+export function appUrl() {
+    return `http://localhost:${appPort}`;
 }

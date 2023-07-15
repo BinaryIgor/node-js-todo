@@ -1,6 +1,6 @@
 import { Request, NextFunction } from "express";
 import { UnauthenticatedError } from "../common/errors";
-import { UserContext } from "./auth-api";
+import { AuthClient, UserContext } from "./auth-api";
 import { setUserContext } from "./web-user-context";
 
 const TOKEN_PREFIX = "Bearer ";
@@ -9,7 +9,7 @@ const TOKEN_PREFIX = "Bearer ";
 export class AuthMiddleware {
 
     constructor(readonly isPublicEndpoint: (endpoint: string) => boolean,
-        readonly authenticate: (token: string) => UserContext) { }
+        readonly authClient: AuthClient) { }
 
     call(req: Request, next: NextFunction) {
         const context = this.authenticateOrUndefined(req);
@@ -34,7 +34,7 @@ export class AuthMiddleware {
 
         if (authorization && authorization.startsWith(TOKEN_PREFIX)) {
             const token = authorization.replace(TOKEN_PREFIX, "");
-            return this.authenticate(token);
+            return this.authClient.authenticate(token);
         }
 
         return undefined;

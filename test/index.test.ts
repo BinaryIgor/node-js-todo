@@ -1,7 +1,7 @@
 import { expect } from "chai";
 // import request from "supertest";
 // import app from "../src/index";
-import { User } from "../src/user/user";
+import { User } from "../src/user/models";
 
 describe("Makes basic requests", () => {
     // it('should respond with 200 status', () => {

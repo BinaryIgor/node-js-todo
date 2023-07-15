@@ -6,7 +6,6 @@ export class CreateTodoHandler {
 
     constructor(private readonly todoRepository: TodoRepository) { }
 
-
     async handle(command: Todo): Promise<Todo> {
         TodoValidator.validateTodo(command);
         
