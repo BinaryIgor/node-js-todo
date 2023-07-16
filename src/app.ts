@@ -8,7 +8,7 @@ import { postgresDb } from "./common/postgres-db";
 import { AuthModule } from "./auth/auth-module";
 import { buildTodoRoutes } from "./todo/todo-routes";
 import promClient from "prom-client";
-import { Clock, defaultClock } from "./common/date";
+import { Clock, defaultClock } from "./common/dates";
 
 function isPublicEndpoint(endpoint: string): boolean {
     return endpoint.startsWith("/users/sign-in") || endpoint.startsWith("/users/sign-up")

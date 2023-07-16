@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { AppError, ValidationError } from "./errors";
+import * as Dates from "./dates";
 
 export class BodyRequiredError extends AppError {
     constructor() {
@@ -38,7 +39,7 @@ export function requireBody<T>(req: Request): T {
 export function requireDateTimeInIsoFormat(dateTime: string): Date {
     try {
         const parsed = new Date(dateTime);
-        if (parsed.toISOString() == dateTime) {
+        if (Dates.dateTimeString(parsed) !== dateTime) {
             throw new ValidationError("");
         }
         return parsed;

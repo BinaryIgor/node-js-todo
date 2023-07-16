@@ -1,5 +1,5 @@
 import { UUID } from "../common/types";
-import * as time from "../common/date";
+import * as time from "../common/dates";
 import { AuthClient, AuthToken, AuthTokens, UserContext } from "./auth-api";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { InvalidAuthTokenError } from "../common/errors";

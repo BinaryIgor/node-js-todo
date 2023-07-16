@@ -5,9 +5,9 @@ export class Todo {
         readonly id: UUID,
         readonly userId: UUID,
         readonly name: string,
-        readonly deadline: Date | null,
+        readonly deadline: Date | null = null,
         readonly priority: Priority,
-        readonly description: string | null,
+        readonly description: string | null = null,
         readonly steps: Step[]) { }
 
     static create(todo: {

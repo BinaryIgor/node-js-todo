@@ -16,6 +16,13 @@ export class TestUserClient {
             .then(r => r.body.id);
     }
 
+    async createUserWithToken({ name = "user-" + randomString(3), password = randomString() + "a1Z" } = {}):
+        Promise<{ id: UUID, token: string }> {
+        const id = await this.createUser({ name, password });
+        const token = this.accessTokenForUser(id);
+        return { id, token };
+    }
+
     accessTokenForUser(id: UUID): string {
         return this.authClient.ofUser(id).access.token;
     }

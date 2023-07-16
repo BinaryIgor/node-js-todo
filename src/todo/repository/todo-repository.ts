@@ -3,7 +3,7 @@ import { Priority, Todo } from "../todo";
 
 export class TodosQuery {
     constructor(readonly userId: UUID, 
-        readonly priorities: Priority[], 
+        readonly priorities?: Priority[], 
         readonly deadlineFrom?: Date,
         readonly deadlineTo?: Date) {}
 }

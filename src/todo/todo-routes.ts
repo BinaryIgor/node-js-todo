@@ -6,7 +6,7 @@ import { asyncHandler, requireBody, requireDateTimeInIsoFormat, requireEnum } fr
 import { SqlTodoRepository } from "./repository/sql-todo-repository";
 import { getUserIdOrThrow } from "../auth/web-user-context";
 import { newId } from "../common/ids";
-import { GetUserTodosHandler } from "./handler/get-user-todos-handler";
+import { GetTodosHandler } from "./handler/get-todos-handler";
 import { TodosQuery } from "./repository/todo-repository";
 import { UUID } from "../common/types";
 
@@ -14,7 +14,7 @@ export const buildTodoRoutes = (db: Knex) => {
     const todoRepository = new SqlTodoRepository(db);
 
     const createTodoHandler = new CreateTodoHandler(todoRepository);
-    const getUserTodosHandler = new GetUserTodosHandler(todoRepository);
+    const getTodosHandler = new GetTodosHandler(todoRepository);
 
     const todoRoutes = Router();
 
@@ -32,14 +32,14 @@ export const buildTodoRoutes = (db: Knex) => {
     }));
 
     todoRoutes.get("/", asyncHandler(async (req: Request, res: Response) => {
-        const priorities = (req.query.priority as string[]).map(p => p as Priority);
+        const priorities = prioritiesFromQueryParam(req);
 
         const deadlineFromStr = req.query.deadlineFrom as (string | undefined);
         const deadlineToStr = req.query.deadlineTo as (string | undefined);
 
         const userId = getUserIdOrThrow(req);
 
-        const todos = await getUserTodosHandler.handle(
+        const todos = await getTodosHandler.handle(
             new TodosQuery(
                 userId, priorities,
                 optionalDateTime(deadlineFromStr),
@@ -52,15 +52,22 @@ export const buildTodoRoutes = (db: Knex) => {
     return todoRoutes;
 };
 
+function prioritiesFromQueryParam(req: Request): Priority[] {
+    const priorities = req.query.priority;
+    if(!priorities) {
+        return [];
+    }
+    return (priorities as string[]).map(p => p as Priority);
+}
+
 function optionalDateTime(dateTime: string | undefined): Date | undefined {
     return dateTime ? requireDateTimeInIsoFormat(dateTime) : undefined;
 }
 
-
 export class CreateTodoRequest {
     constructor(
         readonly name: string,
-        readonly deadline: Date | null,
+        readonly deadline: string | null,
         readonly priority: Priority,
         readonly description: string | null,
         readonly steps: Step[]) { }
@@ -71,7 +78,7 @@ function todoFromCreateRequest(request: CreateTodoRequest, todoId: UUID, userId:
         id: todoId,
         userId: userId,
         name: request.name,
-        deadline: request.deadline,
+        deadline: request.deadline ? requireDateTimeInIsoFormat(request.deadline) : null,
         priority: request.priority,
         description: request.description,
         steps: request.steps

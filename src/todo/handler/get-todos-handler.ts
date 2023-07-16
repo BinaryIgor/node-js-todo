@@ -1,7 +1,7 @@
 import { Todo  } from "../todo";
 import { TodoRepository, TodosQuery } from "../repository/todo-repository";
 
-export class GetUserTodosHandler {
+export class GetTodosHandler {
     constructor(private readonly todoRepository: TodoRepository) { }
 
     async handle(query: TodosQuery): Promise<Todo[]> {

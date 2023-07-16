@@ -1,6 +1,6 @@
 import { InvalidStepNameError, InvalidStepDescriptionError, InvalidTodoDeadlineError, InvalidTodoDescriptionError, InvalidTodoNameError, InvalidTodoPriorityError, InvalidTodoTooManyStepsError, InvalidTodoNotUniqueStepsError, InvalidStepOrderError } from "./todo-errors";
 import * as Validator from "../common/validator";
-import * as Dates from "../common/date";
+import * as Dates from "../common/dates";
 import { Priority, Step, Todo } from "./todo";
 
 export const MAX_TODO_DESCRIPTION_LENGTH = 3_000;

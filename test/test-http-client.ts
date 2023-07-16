@@ -17,6 +17,7 @@ export class TestHttpClient {
     executeRequest(path: string, {
         method = "GET",
         query = {},
+        accessToken: string = null,
         headers = {},
         body = {}
     } = {}) {

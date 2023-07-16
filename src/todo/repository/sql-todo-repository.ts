@@ -37,7 +37,12 @@ interface TodoStepRow {
 
 export class SqlTodoRepository implements TodoRepository {
 
-    constructor(private readonly db: Knex) { }
+    constructor(private readonly db: Knex) { 
+        // this.db.on('start', (builder) => {
+        //     // do something with builder.toQuery();
+        //     console.log("Query...", builder.toQuery());
+        //   });
+    }
 
     async todosOfUser(query: TodosQuery): Promise<Todo[]> {
         const rows = await this.db.select({
@@ -45,6 +50,7 @@ export class SqlTodoRepository implements TodoRepository {
             t_user_id: 't.user_id',
             t_name: 't.name',
             t_deadline: 't.deadline',
+            t_priority: 't.priority',
             t_description: 't.description',
             s_order: 's.order',
             s_name: 's.name',
@@ -56,7 +62,7 @@ export class SqlTodoRepository implements TodoRepository {
             .where(builder => {
                 builder.where("user_id", query.userId);
 
-                if (query.priorities) {
+                if (query.priorities && query.priorities.length > 0) {
                     builder.and.whereIn("priority", query.priorities);
                 }
 
@@ -89,6 +95,7 @@ export class SqlTodoRepository implements TodoRepository {
 
             if (!todoIds.has(r.t_id)) {
                 todoIds.add(r.t_id);
+
                 todosdWithoutSteps.push(Todo.create({
                     id: r.t_id,
                     userId: r.t_user_id,

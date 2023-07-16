@@ -3,7 +3,7 @@ import { asyncHandler, requireBody } from "../common/web";
 import { AuthClient, RefreshTokenRequest } from "./auth-api";
 import { AuthMiddleware } from "./auth-middleware";
 import { JwtAuthClient } from "./jwt-auth-client";
-import { Clock } from "../common/date";
+import { Clock } from "../common/dates";
 
 export class AuthModule {
 

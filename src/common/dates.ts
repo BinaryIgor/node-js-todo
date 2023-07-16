@@ -17,6 +17,10 @@ export function datePlusSeconds(date: Date, seconds: number): Date {
     return newDate;
 }
 
+export function dateTimeString(date: Date): string {
+    return date.toISOString();
+}
+
 export interface Clock {
     now(): Date
 }
