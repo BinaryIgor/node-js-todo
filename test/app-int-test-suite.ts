@@ -3,10 +3,10 @@ import { startApp } from "../src/app";
 import request from 'supertest';
 import { AuthClient } from "../src/auth/auth-api";
 import * as TestUtils from "./test-utils";
-
-
+import { TestHttpClient } from "./test-http-client";
 
 let appPort: number;
+export let httpClient: TestHttpClient;
 export let authClient: AuthClient;
 export const clock: TestUtils.TestClock = new TestUtils.TestClock();
 
@@ -19,6 +19,8 @@ export const appIntTestSuite = (testsDescription: any, testsCallback: Function) 
             await CustomPostgreSqlContainer.startAndInit();
 
             appPort = 10_000 + Math.ceil(Math.random() * 10_000);
+
+            httpClient = new TestHttpClient(appUrl());
 
             const app = startApp({
                 port: appPort,

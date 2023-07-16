@@ -66,7 +66,8 @@ export class SqlTodoRepository implements TodoRepository {
                 if(query.deadlineTo) {
                     builder.and.where('deadline', '<', query.deadlineTo);
                 }
-            }) as TodoStepRow[];
+            })
+            .orderBy("t.created_at", "s.order") as TodoStepRow[];
 
         return this.todoStepsRowsToTodos(rows);
     }

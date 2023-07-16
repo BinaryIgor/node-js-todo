@@ -2,7 +2,7 @@ import { assert } from "chai";
 import * as chai from "chai";
 import chaiExclude from "chai-exclude";
 import { assertJsonResponse } from "../web-test-utils";
-import { appIntTestSuite, appRequest, appUrl, authClient } from "../app-int-test-suite";
+import { appIntTestSuite, appRequest, appUrl, authClient, httpClient } from "../app-int-test-suite";
 import { CreateTodoRequest } from "../../src/todo/todo-routes";
 import { TestUserClient } from "../user/test-user-client";
 import * as TestTodoObjects from "./test-todo-objects";
@@ -31,11 +31,37 @@ appIntTestSuite("Todos endpoints tests", () => {
             assert.deepEqualExcluding(body, todo, 'id');
         }, 201);
     });
+
+    it(`should allow to search user todos`, async () => {
+        const user1Id = await userClient.createUser();
+        const user2Id = await userClient.createUser();
+    });
 });
 
 function createTodoRequest(accessToken: string, request: CreateTodoRequest) {
+    httpClient.accessToken = accessToken;
+    return httpClient.executeRequest(TODOS_URL, { method: "POST", body: request })
+}
+
+function getTodosRequest(accessToken: String,
+    priorities: string[],
+    deadlineFrom?: string,
+    deadlineTo?: string) {
+    const query: any = {};
+
+    if (priorities) {
+        query.priorities = priorities;
+    }
+    if (deadlineFrom) {
+        query.deadlineFrom = deadlineFrom;
+    }
+    if (deadlineTo) {
+        query.deadlineTo = deadlineTo;
+    }
+
     return appRequest()
-        .post(TODOS_URL)
-        .set("Authorization", `Bearer ${accessToken}`)
-        .send(request);
+        .get(TODOS_URL)
+        .query(query)
+        .set("Authorization", `Bearer ${accessToken}`);
+
 }
